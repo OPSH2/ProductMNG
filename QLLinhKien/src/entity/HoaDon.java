@@ -1,36 +1,15 @@
 package entity;
 
 import java.util.Date;
+import java.util.List;
 
 public class HoaDon {
 	private String maHD;
-	private NhanVien nhanVien;
-	private KhachHang khachHang;
-	private Date ngayDatHang;
-	private Date ngayGiaoHang;
-	private String noiNhanGiaoHang;
-	private double giaBan;
-
-	public HoaDon() {
-		super();
-	}
-
-	public HoaDon(String maHD) {
-		super();
-		this.maHD = maHD;
-	}
-
-	public HoaDon(String maHD, NhanVien nhanVien, KhachHang khachHang, Date ngayDatHang, Date ngayGiaoHang,
-			String noiNhanGiaoHang, double giaBan) {
-		super();
-		this.maHD = maHD;
-		this.nhanVien = nhanVien;
-		this.khachHang = khachHang;
-		this.ngayDatHang = ngayDatHang;
-		this.ngayGiaoHang = ngayGiaoHang;
-		this.noiNhanGiaoHang = noiNhanGiaoHang;
-		this.giaBan = giaBan;
-	}
+	private NhanVien maNV;
+	private KhachHang maKH;
+	private Date ngayLapHoaDon;
+	List<ChiTietHoaDon> chiTietHoaDon;
+	private double tongTien;
 
 	public String getMaHD() {
 		return maHD;
@@ -40,58 +19,90 @@ public class HoaDon {
 		this.maHD = maHD;
 	}
 
-	public NhanVien getNhanVien() {
-		return nhanVien;
+	public NhanVien getMaNV() {
+		return maNV;
 	}
 
-	public void setNhanVien(NhanVien nhanVien) {
-		this.nhanVien = nhanVien;
+	public void setMaNV(NhanVien maNV) {
+		this.maNV = maNV;
 	}
 
-	public KhachHang getKhachHang() {
-		return khachHang;
+	public KhachHang getMaKH() {
+		return maKH;
 	}
 
-	public void setKhachHang(KhachHang khachHang) {
-		this.khachHang = khachHang;
+	public void setMaKH(KhachHang maKH) {
+		this.maKH = maKH;
 	}
 
-	public Date getNgayDatHang() {
-		return ngayDatHang;
+	public Date getNgayLapHoaDon() {
+		return ngayLapHoaDon;
 	}
 
-	public void setNgayDatHang(Date ngayDatHang) {
-		this.ngayDatHang = ngayDatHang;
+	public void setNgayLapHoaDon(Date ngayLapHoaDon) {
+		this.ngayLapHoaDon = ngayLapHoaDon;
 	}
 
-	public Date getNgayGiaoHang() {
-		return ngayGiaoHang;
+	public List<ChiTietHoaDon> getChiTietHoaDon() {
+		return chiTietHoaDon;
 	}
 
-	public void setNgayGiaoHang(Date ngayGiaoHang) {
-		this.ngayGiaoHang = ngayGiaoHang;
+	public void setChiTietHoaDon(List<ChiTietHoaDon> chiTietHoaDon) {
+		this.chiTietHoaDon = chiTietHoaDon;
 	}
 
-	public String getNoiNhanGiaoHang() {
-		return noiNhanGiaoHang;
+	public double getTongTien() {
+		return tongTien;
 	}
 
-	public void setNoiNhanGiaoHang(String noiNhanGiaoHang) {
-		this.noiNhanGiaoHang = noiNhanGiaoHang;
+	public void setTongTien(double tongTien) {
+		this.tongTien = tongTien;
 	}
 
-	public double getGiaBan() {
-		return giaBan;
+	public HoaDon(String maHD, NhanVien maNV, KhachHang maKH, Date ngayLapHoaDon, List<ChiTietHoaDon> chiTietHoaDon) {
+		this.maHD = maHD;
+		this.maNV = maNV;
+		this.maKH = maKH;
+		this.ngayLapHoaDon = ngayLapHoaDon;
+		this.chiTietHoaDon = chiTietHoaDon;
+		this.tongTien = tinhTongTien();
 	}
 
-	public void setGiaBan(double giaBan) {
-		this.giaBan = giaBan;
+	
+	
+	public HoaDon(String maHD, NhanVien maNV, KhachHang maKH, Date ngayLapHoaDon) {
+		this.maHD = maHD;
+		this.maNV = maNV;
+		this.maKH = maKH;
+		this.ngayLapHoaDon = ngayLapHoaDon;
+	}
+	
+	
+
+	public HoaDon(String maHD, KhachHang maKH) {
+		this.maHD = maHD;
+		this.maKH = maKH;
+	}
+
+	public HoaDon(String maHD) {
+		this.maHD = maHD;
+	}
+
+	public HoaDon() {
 	}
 
 	@Override
 	public String toString() {
-		return "HoaDon[maHD=" + maHD + ", nhanVien=" + nhanVien + ", khacHang=" + khachHang + ", ngayDatHang="
-				+ ngayDatHang + ", ngayGiaoHang=" + ngayDatHang + ", noinhanGiaoHang=" + noiNhanGiaoHang + ", giaBan="
-				+ giaBan + "]";
+		return "HoaDon [maHD=" + maHD + ", maNV=" + maNV + ", maKH=" + maKH + ", ngayLapHoaDon=" + ngayLapHoaDon
+				+ ", chiTietHoaDon=" + chiTietHoaDon + ", tongTien=" + tongTien + "]";
 	}
+
+	public double tinhTongTien() {
+		double tongTien = 0;
+		for (ChiTietHoaDon cthd : chiTietHoaDon) {
+			tongTien += cthd.getThanhTien();
+		}
+		return tongTien;
+	}
+
 }

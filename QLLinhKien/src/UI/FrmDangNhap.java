@@ -10,6 +10,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.sql.SQLException;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -22,16 +24,27 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import connectDB.ConnectDB;
+import dao.TaiKhoan_DAO;
+import entity.TaiKhoan;
 
-public class FrmDangNhap extends JFrame implements  ActionListener,KeyListener {
-	private JTextField txtTenDangNhap;
+public class FrmDangNhap extends JFrame implements ActionListener, KeyListener {
+	private static JTextField txtTenDangNhap;
 	private JTextField txtMatKhau;
 	private JButton btnDangNhap;
 	private JButton btnThoat;
-	private String tenDangNhap[]= {"nhanvien1","nhanvien2"};
-	private String matKhau[]= {"matkhau1","matkhau2"};
-	
+	private TaiKhoan_DAO taikhoan_dao;
+	private JLabel lblMK;
+	private JLabel lblTDN;
+
 	public FrmDangNhap() {
+		try {
+			ConnectDB.getInstance().connect();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		taikhoan_dao = new TaiKhoan_DAO();
+		
 		setTitle("Đăng Nhập");
 		setSize(450, 235);
 		setLocationRelativeTo(null);
@@ -40,121 +53,165 @@ public class FrmDangNhap extends JFrame implements  ActionListener,KeyListener {
 
 		JPanel p = new JPanel(new BorderLayout());
 		this.add(p);
-		
+
 		JPanel pTop = new JPanel();
-	
+
 		JLabel lblTitle = new JLabel("ĐĂNG NHẬP");
-		lblTitle.setFont(new Font("serif", Font.BOLD, 25));	
+		lblTitle.setFont(new Font("serif", Font.BOLD, 25));
 		lblTitle.setForeground(Color.white);
 		pTop.add(lblTitle);
-		
-		pTop.setBackground(Color.GRAY);
+
+		pTop.setBackground(new Color(0, 148, 224));
 		p.add(pTop, BorderLayout.NORTH);
-		
+
 		JPanel pcenter = new JPanel();
-		Box b,b1,b2;
-		b =Box.createVerticalBox();
-		b1=Box.createHorizontalBox();
-		b2=Box.createHorizontalBox();
-		
+		Box b, b1, b2;
+		b = Box.createVerticalBox();
+		b1 = Box.createHorizontalBox();
+		b2 = Box.createHorizontalBox();
+
 		txtTenDangNhap = new JTextField(20);
-//		ImageIcon imageIcon3 = new ImageIcon("Image/User.png");
-//		Image image3 =imageIcon3.getImage();
-//		Image imageResize3 = image3.getScaledInstance(25, 25, Image.SCALE_SMOOTH);
-//		b.add(Box.createVerticalStrut(10));
-//		b1.add(new JLabel(new ImageIcon(imageResize3)));
-		b1.add(new JLabel("Tên đăng nhập:"));
+		b1.add(lblTDN = new JLabel("Tên đăng nhập:"));
 		b1.add(Box.createHorizontalStrut(5));
 		b1.add(txtTenDangNhap);
 		b.add(b1);
-		
+
 		b.add(Box.createVerticalStrut(20));
 		txtMatKhau = new JPasswordField(20);
-//		ImageIcon imageIcon4 = new ImageIcon("Image/Key.png");
-//		Image image4 =imageIcon4.getImage();
-//		Image imageResize4 = image4.getScaledInstance(25, 25, Image.SCALE_SMOOTH);
-//		b2.add(new JLabel(new ImageIcon(imageResize4)));
-		b2.add(new JLabel("Mật khẩu:"));
-		b2.add(Box.createHorizontalStrut(37));
+		b2.add(lblMK = new JLabel("Mật khẩu:"));
+		b2.add(Box.createHorizontalStrut(45));
 		b2.add(txtMatKhau);
-		
+
 		b.add(b2);
 		b.add(Box.createVerticalStrut(10));
 		pcenter.add(b);
-		
-		
-		p.add(pcenter,BorderLayout.CENTER);
-		
+
+		p.add(pcenter, BorderLayout.CENTER);
+
 		JPanel pBot = new JPanel();
-//		ImageIcon imageIcon1 = new ImageIcon("Image/Login.png");
-//		Image image1 =imageIcon1.getImage();
-//		Image imageResize1 = image1.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-		btnDangNhap =new JButton("Đăng nhập");
-		
-//		ImageIcon imageIcon2 = new ImageIcon("Image/exitmini.png");
-//		Image image2 =imageIcon2.getImage();
-//		Image imageResize2 = image2.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-		btnThoat = new JButton("Thoát");
+		btnDangNhap = new JButton("Đăng nhập", new ImageIcon("image/trangchu.png"));
+		btnThoat = new JButton("Thoát", new ImageIcon("image/out.png"));
 		pBot.add(Box.createHorizontalStrut(100));
 		pBot.add(btnDangNhap);
-	
+
 		pBot.add(btnThoat);
 		pcenter.add(pBot);
+		
+		btnDangNhap.setBackground(new Color(0, 148, 224));
+		btnDangNhap.setForeground(Color.WHITE);
+		btnDangNhap.setFocusPainted(false);
+		btnThoat.setBackground(new Color(0, 148, 224));
+		btnThoat.setForeground(Color.WHITE);
+		btnThoat.setFocusPainted(false);
 		
 		btnDangNhap.addActionListener(this);
 		btnThoat.addActionListener(this);
 		txtTenDangNhap.addKeyListener(this);
 		txtMatKhau.addKeyListener(this);
 		
-		txtTenDangNhap.setText("nhanvien1");
-		txtMatKhau.setText("matkhau1");
+		txtTenDangNhap.setFont(new Font("Tahoma",Font.PLAIN,14));
+		txtMatKhau.setFont(new Font("Tahoma",Font.PLAIN,14));
+		lblTDN.setFont(new Font("Tahoma",Font.BOLD,14));
+		lblMK.setFont(new Font("Tahoma",Font.BOLD,14));
+		btnDangNhap.setFont(new Font("Tahoma",Font.BOLD,14));
+		btnThoat.setFont(new Font("Tahoma",Font.BOLD,14));
+		lblTitle.setFont(new Font("Tahoma",Font.BOLD,14));
+		
+
+		txtTenDangNhap.setText("QL1002");
+		txtMatKhau.setText("123");
 	}
+
 	public static void main(String[] args) {
-		new FrmDangNhap().setVisible(true);
+		/* Set the Nimbus look and feel */
+		// <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
+		// (optional) ">
+		/*
+		 * If Nimbus (introduced in Java SE 6) is not available, stay with the default
+		 * look and feel. For details see
+		 * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+		 */
+		try {
+			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+				if ("".equals(info.getName())) {
+					javax.swing.UIManager.setLookAndFeel(info.getClassName());
+					break;
+				}
+			}
+		} catch (ClassNotFoundException ex) {
+			java.util.logging.Logger.getLogger(FrmNhanVien.class.getName()).log(java.util.logging.Level.SEVERE, null,
+					ex);
+		} catch (InstantiationException ex) {
+			java.util.logging.Logger.getLogger(FrmNhanVien.class.getName()).log(java.util.logging.Level.SEVERE, null,
+					ex);
+		} catch (IllegalAccessException ex) {
+			java.util.logging.Logger.getLogger(FrmNhanVien.class.getName()).log(java.util.logging.Level.SEVERE, null,
+					ex);
+		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
+			java.util.logging.Logger.getLogger(FrmNhanVien.class.getName()).log(java.util.logging.Level.SEVERE, null,
+					ex);
+		}
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				new FrmDangNhap().setVisible(true);
+			}
+		});
 	}
+
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
-		
+
 		if (o.equals(btnDangNhap)) {
-			String txtTen=txtTenDangNhap.getText();
-			String txtPass=txtMatKhau.getText();
-			
-			int flag=0;
-			for (int i = 0; i < tenDangNhap.length; i++) 
-				if (txtTen.equals(tenDangNhap[i]) && txtPass.equals(matKhau[i])) 
-					flag=1;
-			
-			if(flag==1) {
-				ImageIcon imageIcon5 = new ImageIcon("Image/icon-thanh-cong.png");
-				Image image5 =imageIcon5.getImage();
-				Image imageResize5 = image5.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-			
-				JOptionPane.showMessageDialog(this, "Đăng nhập thành công", "Thông báo",0,new ImageIcon(imageResize5));
-				
-				new GUI_NhanVien().setVisible(true);
-				setVisible(false);
-			}			
-			else 
-				JOptionPane.showMessageDialog(this, "Tài khoản không đúng", "Thông báo",2);
-	
-		}
-		else if(o.equals(btnThoat)) {
+			String taikhoan = txtTenDangNhap.getText();
+			String matkhau = txtMatKhau.getText();
+
+			int flag = 0;
+			List<TaiKhoan> listTK = taikhoan_dao.getalltbTaiKhoan();
+			for (TaiKhoan tk : listTK) {
+				if (tk.getTenDN().trim().equals(taikhoan) && tk.getMatKhau().trim().equals(matkhau)) {
+					flag = 1;
+					break;
+				}
+			}
+			if (flag == 0) {
+				JOptionPane.showMessageDialog(this, "Đăng nhập thất bại!!!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+				txtTenDangNhap.requestFocus();
+				return;
+			} else {
+					GUI gui = new GUI();
+					gui.setVisible(true);
+					gui.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+					gui.setLocationRelativeTo(null);
+					dispose();				
+			}
+		} else if (o.equals(btnThoat)) {
 			System.exit(0);
 		}
-		
+
 	}
+
+	@Override
 	public void keyPressed(KeyEvent e) {
-		if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			btnDangNhap.doClick();
 		}
 	}
+
+	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
+
+	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	public static String getTaiKhoan() {
+		return txtTenDangNhap.getText();
 	}
 
 }
